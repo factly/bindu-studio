@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input, Row, Col } from 'antd';
+import { Input, Row, Col, Select } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { getValueFromNestedPath } from '../../utils/index.js';
 
@@ -10,17 +10,17 @@ import {
   SET_BACKGROUND,
 } from '../../constants/chart_properties.js';
 
+const { Option } = Select;
+
 function Dimensions(props) {
-  const spec = useSelector((state) => state.chart.spec);
+  const { spec, config } = useSelector((state) => {
+    return { spec: state.chart.spec, config: state.chart.config };
+  });
 
   const titleObj = props.properties.find((d) => d.prop === 'title');
-  const widthObj = props.properties.find((d) => d.prop === 'width');
-  const heightObj = props.properties.find((d) => d.prop === 'height');
   const backgroundObj = props.properties.find((d) => d.prop === 'background');
 
   const title = getValueFromNestedPath(spec, titleObj.path);
-  const width = getValueFromNestedPath(spec, widthObj.path);
-  const height = getValueFromNestedPath(spec, heightObj.path);
   const background = getValueFromNestedPath(spec, backgroundObj.path);
 
   const dispatch = useDispatch();
@@ -48,44 +48,6 @@ function Dimensions(props) {
       </Row>
       <Row gutter={[0, 12]}>
         <Col span={12}>
-          <label htmlFor="">Width</label>
-        </Col>
-        <Col span={12}>
-          <Input
-            value={width}
-            placeholder="width"
-            type="number"
-            onChange={(e) =>
-              dispatch({
-                type: SET_WIDTH,
-                payload: { value: e.target.value, path: widthObj.path },
-                chart: 'shared',
-              })
-            }
-          />
-        </Col>
-      </Row>
-      <Row gutter={[0, 12]}>
-        <Col span={12}>
-          <label htmlFor="">Height</label>
-        </Col>
-        <Col span={12}>
-          <Input
-            value={height}
-            placeholder="height"
-            type="number"
-            onChange={(e) =>
-              dispatch({
-                type: SET_HEIGHT,
-                payload: { value: e.target.value, path: heightObj.path },
-                chart: 'shared',
-              })
-            }
-          />
-        </Col>
-      </Row>
-      <Row gutter={[0, 12]}>
-        <Col span={12}>
           <label htmlFor="">Background</label>
         </Col>
         <Col span={12}>
@@ -100,6 +62,32 @@ function Dimensions(props) {
               })
             }
           />
+        </Col>
+      </Row>
+      <Row gutter={[0, 12]}>
+        <Col span={12}>
+          <label htmlFor="">Theme</label>
+        </Col>
+        <Col span={12}>
+          <Select
+            value={config}
+            onChange={(value) =>
+              dispatch({
+                type: 'set-chart-theme',
+                value: value,
+              })
+            }
+          >
+            <Option value="dark">dark</Option>
+            <Option value="excel">excel</Option>
+            <Option value="fivethirtyeight">fivethirtyeight</Option>
+            <Option value="ggplot2">ggplot2</Option>
+            <Option value="latimes">latimes</Option>
+            <Option value="quartz">quartz</Option>
+            <Option value="vox">vox</Option>
+            <Option value="urbaninstitute">urbaninstitute</Option>
+            <Option value="googlecharts">googlecharts</Option>
+          </Select>
         </Col>
       </Row>
     </div>

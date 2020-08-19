@@ -4,6 +4,7 @@ import rootReducer from '../reducer/index.js';
 const defaultStore = {
   chart: {
     spec: {},
+    config: '',
     showOptions: true,
     chartName: 'Untitled',
   },

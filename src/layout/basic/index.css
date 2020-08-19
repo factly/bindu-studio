@@ -1,0 +1,7 @@
+.ant-layout {
+  height: 100%;
+}
+
+.layout-content {
+  height: calc(100% - 64px);
+}

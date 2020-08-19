@@ -4,8 +4,8 @@
   "data": {
     "url": "https://vega.github.io/editor/data/stocks.csv"
   },
-  "width": 500,
-  "height": 300,
+  "width": "container",
+  "height": "container",
   "layer": [
     {
       "mark": {

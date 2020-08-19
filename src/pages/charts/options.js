@@ -1,5 +1,6 @@
 import React from 'react';
 import Area from './area/index.js';
+import AreaData from './area/data.js';
 import StackedArea from './stacked_area/index.js';
 import StackedAreaProportional from './stacked_area_proportional/index.js';
 import Bar from './bar/index.js';
@@ -31,6 +32,62 @@ function OptionComponent() {
   switch (id) {
     case 0:
       return <Area />;
+    case 1:
+      return <StackedArea />;
+    case 2:
+      return <StackedAreaProportional />;
+    case 3:
+      return <Bar />;
+    case 4:
+      return <HorizontalBar />;
+    case 5:
+      return <HorizontalStackBar />;
+    case 6:
+      return <StackedBar />;
+    case 7:
+      return <GroupedLine />;
+    case 8:
+      return <Line />;
+    case 9:
+      return <LineProjected />;
+    case 10:
+      return <Pie />;
+    case 11:
+      return <Donut />;
+    case 12:
+      return <LineBar />;
+    case 13:
+      return <DivergingBar />;
+    case 14:
+      return <GroupedBarProportional />;
+    case 15:
+      return <HorizontalGroupedBarProportional />;
+    case 16:
+      return <GridPie />;
+    case 17:
+      return <GridBar />;
+    case 18:
+      return <GridLine />;
+    case 19:
+      return <GroupedBar />;
+    case 20:
+      return <IndiaStates />;
+    case 21:
+      return <TreeMap />;
+    case 22:
+      return <BarChartRace />;
+
+    default:
+      return null;
+  }
+}
+
+export function DataComponent() {
+  let { id } = useParams();
+  id = parseInt(id);
+  switch (id) {
+    case 0:
+      return <AreaData />;
     case 1:
       return <StackedArea />;
     case 2:

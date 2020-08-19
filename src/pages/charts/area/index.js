@@ -14,7 +14,7 @@ import { useDispatch } from 'react-redux';
 import Spec from './default.json';
 const { Panel } = Collapse;
 
-function GroupedBarChart() {
+function AreaChart() {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch({ type: 'set-config', value: Spec });
@@ -151,4 +151,4 @@ function GroupedBarChart() {
   );
 }
 
-export default GroupedBarChart;
+export default AreaChart;

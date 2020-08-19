@@ -17,8 +17,8 @@
       "as": "signed_people"
     }
   ],
-  "width": 500,
-  "height": 400,
+  "width": "container",
+  "height": "container",
   "layer": [
     {
       "mark": { "type": "bar" },

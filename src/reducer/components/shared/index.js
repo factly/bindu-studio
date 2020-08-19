@@ -8,12 +8,7 @@ import {
   SET_AREA_LINE_DASHED,
 } from '../../../constants/area_lines.js';
 import { SET_BAR_OPACITY, SET_BAR_CORNER_RADIUS } from '../../../constants/bars.js';
-import {
-  SET_TITLE,
-  SET_WIDTH,
-  SET_HEIGHT,
-  SET_BACKGROUND,
-} from '../../../constants/chart_properties.js';
+import { SET_TITLE, SET_BACKGROUND } from '../../../constants/chart_properties.js';
 import { SET_COLOR } from '../../../constants/colors.js';
 import {
   SET_DATA_LABELS,
@@ -78,22 +73,30 @@ import {
 const sharedReducer = (state = {}, action) => {
   const payload = action.payload;
   switch (action.type) {
+    case 'set-xaxis-column':
+      return produce(state, (draftState) => {
+        const { path, value } = payload;
+        const xAxisColumnObj = getValueFromNestedPath(
+          draftState.spec,
+          path.slice(0, path.length - 1),
+        );
+        xAxisColumnObj[path[path.length - 1]] = value;
+      });
+
+    case 'set-yaxis-column':
+      return produce(state, (draftState) => {
+        const { path, value } = payload;
+        const yAxisColumnObj = getValueFromNestedPath(
+          draftState.spec,
+          path.slice(0, path.length - 1),
+        );
+        yAxisColumnObj[path[path.length - 1]] = value;
+      });
+
     /**
      * GENERAL PROPERTIES
      */
 
-    case SET_WIDTH:
-      return produce(state, (draftState) => {
-        const { path, value } = payload;
-        const widthObj = getValueFromNestedPath(draftState.spec, path.slice(0, path.length - 1));
-        widthObj[path[path.length - 1]] = parseFloat(value);
-      });
-    case SET_HEIGHT:
-      return produce(state, (draftState) => {
-        const { path, value } = payload;
-        const heightObj = getValueFromNestedPath(draftState.spec, path.slice(0, path.length - 1));
-        heightObj[path[path.length - 1]] = value;
-      });
     case SET_TITLE:
       return produce(state, (draftState) => {
         const { path, value } = payload;

@@ -62,7 +62,7 @@ export default function BarChartRace(ref, chartSettings) {
       .map((d) => d3.timeFormat(chartSettings.dateDisplayFormat)(d.date))
       .indexOf(currentTime);
 
-    cursorPointer.attr('transform', () => `translate(${timeScale(chartDataSets[index].date)},0)`);
+    d3.select('#x-axis-cursor').attr('transform', () => `translate(${coords[0]},0)`);
 
     render(index);
   });
@@ -283,7 +283,7 @@ export default function BarChartRace(ref, chartSettings) {
 
   function renderPlayPauseIcon(status) {
     d3.selectAll('.playback-button path').remove();
-    if (status == 'pause') {
+    if (status === 'pause') {
       d3.select('.playback-button')
         .append('path')
         .attr(
@@ -305,7 +305,7 @@ export default function BarChartRace(ref, chartSettings) {
   }
 
   function toogleStatus() {
-    if (status == 'play') {
+    if (status === 'play') {
       status = 'pause';
       stop();
     } else {

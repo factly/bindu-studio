@@ -1,8 +1,8 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
   "description": "A simple pie chart with embedded data.",
-  "width": 500,
-  "height": 300,
+  "width": "container",
+  "height": "container",
   "resolve": { "scale": { "color": "independent" } },
   "data": {
     "values": [

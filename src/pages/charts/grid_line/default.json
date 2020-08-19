@@ -185,8 +185,8 @@
       }
     ]
   },
-  "width": 200,
-  "height": 200,
+  "width": "container",
+  "height": "container",
   "resolve": { "axis": { "x": "independent", "y": "shared" } },
   "mark": {
     "type": "line",

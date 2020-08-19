@@ -2,22 +2,22 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import * as vega from 'vega';
 import { compile } from 'vega-lite';
-
-import BarChartRace from './bar_chart_race/chart.js';
+import CustomChart from './custom_chart.js';
+import * as vegaThemes from 'vega-themes';
 
 function Chart() {
-  const { spec, mode } = useSelector((state) => {
-    return { spec: state.chart.spec, mode: state.chart.mode };
+  const { spec, mode, config } = useSelector((state) => {
+    return { spec: state.chart.spec, mode: state.chart.mode, config: state.chart.config };
   });
 
-  const refContainer = React.useRef(null);
+  const chartContainer = React.useRef(null);
 
   const getSpec = () => {
     switch (mode) {
       case 'vega':
         return spec;
       case 'vega-lite':
-        return compile(spec).spec;
+        return compile({ ...spec, config: vegaThemes[config] }).spec;
       default:
         return spec;
     }
@@ -26,36 +26,25 @@ function Chart() {
   const renderVega = () => {
     if (Object.keys(spec).length) {
       const spec = getSpec();
-      let runtime = vega.parse(spec);
+      let runtime = vega.parse(spec, vegaThemes[config]);
       const loader = vega.loader();
       const view = new vega.View(runtime, {
         loader,
       }).hover();
 
-      view.logLevel(vega.Warn).renderer('svg').initialize(refContainer.current).runAsync();
-    }
-  };
-
-  const renderCustomChart = () => {
-    const type = spec.type;
-    switch (type) {
-      case 'bar-chart-race':
-        var customChart = new BarChartRace(refContainer.current, spec);
-        customChart.render();
-        break;
-      default:
-        return null;
+      view.logLevel(vega.Warn).renderer('svg').initialize(chartContainer.current).runAsync();
     }
   };
 
   const renderChart = () => {
+    chartContainer.current.innerHTML = '';
     switch (mode) {
       case 'vega':
         return renderVega();
       case 'vega-lite':
         return renderVega();
       case 'custom':
-        return renderCustomChart();
+        return CustomChart(spec, chartContainer.current);
       default:
         return spec;
     }
@@ -63,9 +52,9 @@ function Chart() {
 
   React.useEffect(() => {
     renderChart();
-  }, [spec]);
+  }, [spec, config]);
 
-  return <div id="chart" ref={refContainer}></div>;
+  return <div id="chart" ref={chartContainer}></div>;
 }
 
 export default Chart;

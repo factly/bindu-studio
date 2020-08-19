@@ -10,16 +10,6 @@
   padding: 0;
 }
 
-.display-container {
-  padding: 1px;
-}
-
-.option-container {
-  position: relative;
-  transition: right 0.5s;
-  width: 250px;
-}
-
 .chart-name {
   margin-right: 12px;
   font-style: italic;
@@ -33,5 +23,13 @@
 }
 
 .property-container .ant-select {
+  width: 100%;
+}
+
+#chart {
+  height: 100%;
+}
+
+.option-item-collapse {
   width: 100%;
 }

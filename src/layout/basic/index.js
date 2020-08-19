@@ -2,6 +2,7 @@ import React from 'react';
 import { Layout, Card, Menu } from 'antd';
 
 import { Link } from 'react-router-dom';
+import './index.css';
 
 const { Header, Content } = Layout;
 

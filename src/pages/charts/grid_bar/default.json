@@ -190,8 +190,8 @@
     "right": 30,
     "bottom": 5
   },
-  "width": 200,
-  "height": 300,
+  "width": "container",
+  "height": "container",
   "background": "#ffffff",
   "mark": {
     "type": "bar",

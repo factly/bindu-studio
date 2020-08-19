@@ -1,12 +1,18 @@
 {
     "$schema": "https://vega.github.io/schema/vega/v5.json",
     "description": "An interactive world map supporting pan and zoom.",
-    "width": 900,
-    "height": 500,
     "background": "#f0f8ff",
     "autosize": "none",
 
     "signals": [
+    {
+        "name": "width",
+        "init": "containerSize()[0]"
+    },
+    {
+        "name": "height",
+        "init": "containerSize()[1]"
+    },
     {
         "name": "tx",
         "update": "width / 2"
@@ -17,7 +23,7 @@
     },
     {
         "name": "scale",
-        "value": 900,
+        "value": 1400,
         "on": [
         {
             "events":
@@ -133,177 +139,177 @@
         {
             "State": "Andaman and Nicobar",
             "ID": 1287,
-            "Value": 175
+            "Value": 95308
         },
         {
             "State": "Andhra Pradesh",
             "ID": 1288,
-            "Value": 60
+            "Value": 15556590
         },
         {
             "State": "Arunachal Pradesh",
             "ID": 1289,
-            "Value": 126
+            "Value": 379679
         },
         {
             "State": "Assam",
             "ID": 1290,
-            "Value": 243
+            "Value": 9135937
         },
         {
             "State": "Bihar",
             "ID": 1291,
-            "Value": 40
+            "Value": 21763712
         },
         {
             "State": "Chandigarh",
             "ID": 1292,
-            "Value": 182
+            "Value": 231188
         },
         {
             "State": "Chhattisgarh",
             "ID": 1293,
-            "Value": 90
+            "Value": 6967708
         },
         {
             "State": "Dadra and Nagar Haveli",
             "ID": 1294,
-            "Value": 68
+            "Value": 90421
         },
         {
             "State": "Daman and Diu",
             "ID": 1295,
-            "Value": 87
+            "Value": 37597
         },
         {
             "State": "Delhi",
             "ID": 1296,
-            "Value": 224
+            "Value": 4908541
         },
         {
             "State": "Goa",
             "ID": 1297,
-            "Value": 140
+            "Value": 446405
         },
         {
             "State": "Gujarat",
             "ID": 1298,
-            "Value": 230
+            "Value": 18091275
         },
         {
             "State": "Haryana",
             "ID": 1299,
-            "Value": 288
+            "Value": 7357347
         },
         {
             "State": "Himachal Pradesh",
             "ID": 1300,
-            "Value": 60
+            "Value": 2661281
         },
         {
             "State": "Jammu and Kashmir",
             "ID": 1301,
-            "Value": 60
+            "Value": 1905647
         },
         {
             "State": "Jharkhand",
             "ID": 1302,
-            "Value": 40
+            "Value": 8443614
         },
         {
             "State": "Karnataka",
             "ID": 1303,
-            "Value": 60
+            "Value": 19105308
         },
         {
             "State": "Kerala",
             "ID": 1304,
-            "Value": 147
+            "Value": 9639504
         },
         {
             "State": "Lakshadweep",
             "ID": 1305,
-            "Value": 117
+            "Value": 22851
         },
         {
             "State": "Madhya Pradesh",
             "ID": 1306,
-            "Value": 200
+            "Value": 21444447
         },
         {
             "State": "Maharashtra",
             "ID": 1307,
-            "Value": 32
+            "Value": 27959632
         },
         {
             "State": "Manipur",
             "ID": 1308,
-            "Value": 234
+            "Value": 627159
         },
         {
             "State": "Meghalaya",
             "ID": 1309,
-            "Value": 60
+            "Value": 724144
         },
         {
             "State": "Mizoram",
             "ID": 1310,
-            "Value": 403
+            "Value": 224286
         },
         {
             "State": "Nagaland",
             "ID": 1311,
-            "Value": 294
+            "Value": 500510
         },
         {
             "State": "Orissa",
             "ID": 1312,
-            "Value": 90
+            "Value": 10582181
         },
         {
             "State": "Puducherry",
             "ID": 1313,
-            "Value": 81
+            "Value": 444981
         },
         {
             "State": "Punjab",
             "ID": 1314,
-            "Value": 70
+            "Value": 5984888
         },
         {
             "State": "Rajasthan",
             "ID": 1315,
-            "Value": 119
+            "Value": 19628443
         },
         {
             "State": "Sikkim",
             "ID": 1316,
-            "Value": 60
+            "Value": 166922
         },
         {
             "State": "Tamil Nadu",
             "ID": 1317,
-            "Value": 403
+            "Value": 22380373
         },
         {
             "State": "Tripura",
             "ID": 1318,
-            "Value": 294
+            "Value": 1055658
         },
         {
             "State": "Uttar Pradesh",
             "ID": 1319,
-            "Value": 90
+            "Value": 45709922
         },
         {
             "State": "Uttaranchal",
             "ID": 1320,
-            "Value": 81
+            "Value": 2954833
         },
         {
             "State": "West Bengal",
             "ID": 1321,
-            "Value": 70
+            "Value": 27195928
         }]
     },
     {
@@ -358,7 +364,7 @@
         "encode":
         {
             "enter":
-            {   
+            {
                 "strokeDash":
                 {
                     "value": 1
@@ -399,7 +405,7 @@
             {
                 "tooltip":
                 {
-                    "signal": "{\"Name\": datum[\"State\"], \"Value\": format(datum[\"Value\"], \".1f\")}"
+                    "signal": "{\"Name\": datum[\"State\"], \"Value\": format(datum[\"Value\"], \",\")}"
                 },
                 "strokeOpacity":
                 {
@@ -440,5 +446,35 @@
             "type": "geoshape",
             "projection": "projection"
         }]
+    }],
+    "legends": [
+    {
+        "fill": "color",
+        "title": "Winner Votes",
+        "orient": "none",
+        "encode":
+        {
+            "symbols":
+            {
+                "enter":
+                {
+                    "fillOpacity":
+                    {
+                        "value": 0.5
+                    }
+                }
+            },
+            "labels":
+            {
+                "update":
+                {
+                    "text":
+                    {
+                        "field": "value",
+                        "format": ","
+                    }
+                }
+            }
+        }
     }]
 }
