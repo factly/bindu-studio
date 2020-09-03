@@ -1,14 +1,11 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import * as vega from 'vega';
 import { compile } from 'vega-lite';
 import CustomChart from './custom_chart.js';
 import * as vegaThemes from 'vega-themes';
 
-function Chart() {
-  const { spec, mode, config } = useSelector((state) => {
-    return { spec: state.chart.spec, mode: state.chart.mode, config: state.chart.config };
-  });
+function Display(props) {
+  const { spec, mode, config } = props;
 
   const chartContainer = React.useRef(null);
 
@@ -54,7 +51,7 @@ function Chart() {
     renderChart();
   }, [spec, config]);
 
-  return <div id="chart" ref={chartContainer}></div>;
+  return <div style={{ height: 'inherit' }} ref={chartContainer}></div>;
 }
 
-export default Chart;
+export default Display;

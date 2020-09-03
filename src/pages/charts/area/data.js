@@ -3,6 +3,8 @@ import { Input, Row, Col, Select } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { getValueFromNestedPath } from '../../../utils/index.js';
+import { SET_XAXIS_COLUMN, SET_YAXIS_COLUMN } from '../../../constants/chart';
+
 const { Option } = Select;
 
 function AreaChartData(props) {
@@ -35,7 +37,7 @@ function AreaChartData(props) {
             value={xAxisField}
             onChange={(value) =>
               dispatch({
-                type: 'set-xaxis-column',
+                type: SET_XAXIS_COLUMN,
                 payload: { value: value, path: xFieldPath },
                 chart: 'shared',
               })
@@ -58,7 +60,7 @@ function AreaChartData(props) {
             value={yAxisField}
             onChange={(value) =>
               dispatch({
-                type: 'set-yaxis-column',
+                type: SET_YAXIS_COLUMN,
                 payload: { value: value, path: yFieldPath },
                 chart: 'shared',
               })

@@ -1,5 +1,5 @@
-export const SET_AREA_LINES = 'set-area-lines';
-export const SET_AREA_LINE_WIDTH = 'set-area-line-width';
-export const SET_AREA_LINE_OPACITY = 'set-area-line-opacity';
-export const SET_AREA_LINE_CURVE = 'set-area-line-curve';
-export const SET_AREA_LINE_DASHED = 'set-area-line-dashed';
+export const SET_AREA_LINES = 'SET_AREA_LINES';
+export const SET_AREA_LINE_WIDTH = 'SET_AREA_LINE_WIDTH';
+export const SET_AREA_LINE_OPACITY = 'SET_AREA_LINE_OPACITY';
+export const SET_AREA_LINE_CURVE = 'SET_AREA_LINE_CURVE';
+export const SET_AREA_LINE_DASHED = 'SET_AREA_LINE_DASHED';

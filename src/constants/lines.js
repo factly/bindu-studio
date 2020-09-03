@@ -1,4 +1,4 @@
-export const SET_LINE_WIDTH = 'set-set-line-width';
-export const SET_LINE_OPACITY = 'set-line-opacity';
-export const SET_LINE_CURVE = 'set-line-curve';
-export const SET_LINE_DASHED = 'set-line-dashed';
+export const SET_LINE_WIDTH = 'SET_SET_LINE_WIDTH';
+export const SET_LINE_OPACITY = 'SET_LINE_OPACITY';
+export const SET_LINE_CURVE = 'SET_LINE_CURVE';
+export const SET_LINE_DASHED = 'SET_LINE_DASHED';

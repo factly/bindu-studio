@@ -6,6 +6,7 @@ import RegionsLayer from '../../../components/shared/regions_layer.js';
 import GraticuleLayer from '../../../components/shared/graticule.js';
 import ZoomLayer from '../../../components/shared/zoom.js';
 import { useDispatch } from 'react-redux';
+import { SET_CONFIG } from '../../../constants/chart';
 
 import Spec from './default.json';
 const { Panel } = Collapse;
@@ -13,7 +14,7 @@ const { Panel } = Collapse;
 function IndiaStates() {
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch({ type: 'set-config', value: Spec, mode: 'vega' });
+    dispatch({ type: SET_CONFIG, value: Spec, mode: 'vega' });
   }, [dispatch]);
 
   const properties = [

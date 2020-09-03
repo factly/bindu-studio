@@ -5,12 +5,14 @@ import ChartProperties from '../../../components/shared/chart_properties.js';
 import { useDispatch } from 'react-redux';
 
 import Spec from './default.json';
+import { SET_CONFIG } from '../../../constants/chart';
+
 const { Panel } = Collapse;
 
 function BarChartRaceOptions() {
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch({ type: 'set-config', value: Spec, mode: 'custom' });
+    dispatch({ type: SET_CONFIG, value: Spec, mode: 'custom' });
   }, [dispatch]);
 
   return null;

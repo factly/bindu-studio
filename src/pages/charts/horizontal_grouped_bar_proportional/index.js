@@ -10,6 +10,7 @@ import XAxis from '../../../components/shared/x_axis.js';
 import YAxis from '../../../components/shared/y_axis.js';
 import DataLabels from '../../../components/shared/data_labels.js';
 import { useDispatch } from 'react-redux';
+import { SET_CONFIG } from '../../../constants/chart';
 
 import Spec from './default.json';
 const { Panel } = Collapse;
@@ -17,7 +18,7 @@ const { Panel } = Collapse;
 function GroupedBarChart() {
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch({ type: 'set-config', value: Spec });
+    dispatch({ type: SET_CONFIG, value: Spec });
   }, [dispatch]);
 
   const properties = [

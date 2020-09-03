@@ -10,6 +10,7 @@ import {
   SET_BACKGROUND,
 } from '../../constants/chart_properties.js';
 
+import { SET_CHART_THEME } from '../../constants/chart';
 const { Option } = Select;
 
 function Dimensions(props) {
@@ -73,7 +74,7 @@ function Dimensions(props) {
             value={config}
             onChange={(value) =>
               dispatch({
-                type: 'set-chart-theme',
+                type: SET_CHART_THEME,
                 value: value,
               })
             }

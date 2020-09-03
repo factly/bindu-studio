@@ -1,4 +1,4 @@
-export const SET_YAXIS_TITLE = 'set-yaxis-title';
-export const SET_YAXIS_POSITION = 'set-yaxis-position';
-export const SET_YAXIS_LABEL_FORMAT = 'set-yaxis-label-format';
-export const SET_YAXIS_LABEL_COLOR = 'set-yaxis-label-color';
+export const SET_YAXIS_TITLE = 'SET_YAXIS_TITLE';
+export const SET_YAXIS_POSITION = 'SET_YAXIS_POSITION';
+export const SET_YAXIS_LABEL_FORMAT = 'SET_YAXIS_LABEL_FORMAT';
+export const SET_YAXIS_LABEL_COLOR = 'SET_YAXIS_LABEL_COLOR';

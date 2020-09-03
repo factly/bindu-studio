@@ -10,6 +10,7 @@ import Segment from '../../../components/shared/segment.js';
 import DataLabels from '../../../components/shared/pie_data_labels.js';
 
 import { useDispatch } from 'react-redux';
+import { SET_CONFIG } from '../../../constants/chart';
 
 import Spec from './default.json';
 const { Panel } = Collapse;
@@ -17,7 +18,7 @@ const { Panel } = Collapse;
 function PieChar() {
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch({ type: 'set-config', value: Spec });
+    dispatch({ type: SET_CONFIG, value: Spec });
   }, [dispatch]);
 
   const properties = [

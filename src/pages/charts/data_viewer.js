@@ -62,16 +62,6 @@ function DataViewer(props) {
               'virtual-table-cell-last': columnIndex === mergedColumns.length - 1,
             })}
             style={style}
-            onInput={(e) => {
-              dispatch({
-                type: 'set-data',
-                payload: {
-                  rowIndex,
-                  columnIndex: mergedColumns[columnIndex].dataIndex,
-                  value: e.currentTarget.textContent,
-                },
-              });
-            }}
           >
             {rawData[rowIndex][mergedColumns[columnIndex].dataIndex]}
           </div>

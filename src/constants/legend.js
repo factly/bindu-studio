@@ -1,5 +1,5 @@
-export const SET_LEGEND_POSITION = 'set-legend-position';
-export const SET_LEGEND_TITLE = 'set-legend-title';
-export const SET_LEGEND_BACKGROUND = 'set-legend-background';
-export const SET_LEGEND_SYMBOL = 'set-legend-symbol';
-export const SET_LEGEND_SYMBOL_SIZE = 'set-legend-symbol-size';
+export const SET_LEGEND_POSITION = 'SET_LEGEND_POSITION';
+export const SET_LEGEND_TITLE = 'SET_LEGEND_TITLE';
+export const SET_LEGEND_BACKGROUND = 'SET_LEGEND_BACKGROUND';
+export const SET_LEGEND_SYMBOL = 'SET_LEGEND_SYMBOL';
+export const SET_LEGEND_SYMBOL_SIZE = 'SET_LEGEND_SYMBOL_SIZE';

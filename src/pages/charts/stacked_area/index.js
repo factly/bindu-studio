@@ -11,6 +11,7 @@ import DataLabels from '../../../components/shared/data_labels.js';
 
 import Dots from '../../../components/shared/dots.js';
 import Line from '../../../components/shared/area_lines.js';
+import { SET_CONFIG } from '../../../constants/chart';
 
 import { useDispatch } from 'react-redux';
 
@@ -20,7 +21,7 @@ const { Panel } = Collapse;
 function GroupedBarChart() {
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch({ type: 'set-config', value: Spec });
+    dispatch({ type: SET_CONFIG, value: Spec });
   }, [dispatch]);
 
   const properties = [

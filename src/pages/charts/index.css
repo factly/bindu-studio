@@ -30,6 +30,7 @@
   height: 100%;
 }
 
-.option-item-collapse {
+.option-item-collapse,
+.options-container {
   width: 100%;
 }

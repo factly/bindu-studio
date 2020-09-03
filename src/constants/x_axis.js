@@ -1,4 +1,4 @@
-export const SET_XAXIS_TITLE = 'set-xaxis-title';
-export const SET_XAXIS_POSITION = 'set-xaxis-position';
-export const SET_XAXIS_LABEL_FORMAT = 'set-xaxis-label-format';
-export const SET_XAXIS_LABEL_COLOR = 'set-xaxis-label-color';
+export const SET_XAXIS_TITLE = 'SET_XAXIS_TITLE';
+export const SET_XAXIS_POSITION = 'SET_XAXIS_POSITION';
+export const SET_XAXIS_LABEL_FORMAT = 'SET_XAXIS_LABEL_FORMAT';
+export const SET_XAXIS_LABEL_COLOR = 'SET_XAXIS_LABEL_COLOR';

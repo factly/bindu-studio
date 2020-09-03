@@ -1,2 +1,2 @@
-export const SET_TITLE = 'set-title';
-export const SET_BACKGROUND = 'set-background';
+export const SET_TITLE = 'SET_TITLE';
+export const SET_BACKGROUND = 'SET_BACKGROUND';

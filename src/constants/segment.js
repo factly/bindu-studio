@@ -1,4 +1,4 @@
-export const SET_PIE_OUTER_RADIUS = 'set-pie-outer-radius';
-export const SET_PIE_INNER_RADIUS = 'set-pie-inner-radius';
-export const SET_PIE_CORNER_RADIUS = 'set-pie-corner-radius';
-export const SET_PIE_PADDING_ANGLE = 'set-pie-padding-angle';
+export const SET_PIE_OUTER_RADIUS = 'SET_PIE_OUTER_RADIUS';
+export const SET_PIE_INNER_RADIUS = 'SET_PIE_INNER_RADIUS';
+export const SET_PIE_CORNER_RADIUS = 'SET_PIE_CORNER_RADIUS';
+export const SET_PIE_PADDING_ANGLE = 'SET_PIE_PADDING_ANGLE';

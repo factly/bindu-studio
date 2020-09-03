@@ -4,14 +4,14 @@ import { Collapse } from 'antd';
 import ChartProperties from '../../../components/shared/chart_properties.js';
 import TreeMap from '../../../components/shared/tree_map.js';
 import { useDispatch } from 'react-redux';
-
+import { SET_CONFIG } from '../../../constants/chart';
 import Spec from './default.json';
 const { Panel } = Collapse;
 
 function GroupedBarChart() {
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch({ type: 'set-config', value: Spec, mode: 'vega' });
+    dispatch({ type: SET_CONFIG, value: Spec, mode: 'vega' });
   }, [dispatch]);
 
   const properties = [
