@@ -2,7 +2,7 @@ import axios from 'axios';
 
 function createAxiosAuthMiddleware() {
   return ({ getState }) => (next) => (action) => {
-    axios.defaults.headers.common['X-Organisation'] = 3;
+    axios.defaults.headers.common['X-Organisation'] = 1;
     axios.defaults.baseURL = process.env.REACT_APP_API_URL;
     return next(action);
   };

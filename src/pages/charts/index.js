@@ -16,6 +16,7 @@ import { SET_CHART_NAME } from '../../constants/chart';
 const IconSize = 20;
 
 function TitleComponent() {
+  const dispatch = useDispatch();
   const chartName = useSelector((state) => state.chart.chartName);
   const [isChartNameEditable, toggleChartNameEditable] = useState(false);
   if (isChartNameEditable) {
