@@ -4,7 +4,10 @@ import { Input, Select, Form } from 'antd';
 const { Option } = Select;
 
 function YAxis(props) {
+  const chartFieldOptions = props.form.getFieldValue('dataFields');
+
   const titleObj = props.properties.find((d) => d.prop === 'title');
+  const fieldObj = props.properties.find((d) => d.prop === 'field');
   const orientObj = props.properties.find((d) => d.prop === 'orient');
   const formatObj = props.properties.find((d) => d.prop === 'format');
   const labelColorObj = props.properties.find((d) => d.prop === 'label_color');
@@ -13,6 +16,14 @@ function YAxis(props) {
     <div className="property-container">
       <Form.Item name={titleObj.path} label="Title">
         <Input placeholder="Title" type="text" />
+      </Form.Item>
+
+      <Form.Item name={fieldObj.path} label="Data Field">
+        <Select>
+          {chartFieldOptions.map((field) => (
+            <Option value={field}>{field}</Option>
+          ))}
+        </Select>
       </Form.Item>
 
       <Form.Item name={orientObj.path} label="Position">

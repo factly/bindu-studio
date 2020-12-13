@@ -29,6 +29,21 @@ function Chart() {
   const [isChartNameEditable, setChartNameEditable] = useState(false);
   const [view, setView] = useState(null);
 
+  const setViewValue = (view) => {
+    setView(view);
+    // console.log(view.data('dataset'));
+    const dataSource = view.data('dataset');
+    const dataFields = Object.keys(dataSource[0] || {});
+    const currentDataFields = form.getFieldValue(['dataFields']);
+    // console.log(_.isEqual(currentDataFields, dataFields));
+    // console.log({ currentDataFields });
+    if (!_.isEqual(currentDataFields, dataFields)) {
+      form.setFieldsValue({
+        dataFields,
+      });
+    }
+  };
+
   const onDataUpload = (dataDetails) => {
     let values = form.getFieldValue();
     _.unset(values, ['data', 'values']);
@@ -167,7 +182,7 @@ function Chart() {
               {({ getFieldValue }) => {
                 return (
                   <Form.Item>
-                    <Display spec={getFieldValue()} setView={setView} />
+                    <Display spec={getFieldValue()} setView={setViewValue} />
                   </Form.Item>
                 );
               }}

@@ -3,6 +3,7 @@ import * as vega from 'vega';
 import { compile } from 'vega-lite';
 
 function Chart({ spec, setView }) {
+  console.log({ spec });
   const refContainer = React.useRef(null);
 
   const getSpec = () => {
@@ -18,8 +19,19 @@ function Chart({ spec, setView }) {
         loader,
       }).hover();
 
-      view.logLevel(vega.Warn).renderer('svg').initialize(refContainer.current).runAsync();
-      setView(view);
+      view
+        .logLevel(vega.Warn)
+        .renderer('svg')
+        .initialize(refContainer.current)
+        .runAsync()
+        .then(() => {
+          view.runAfter(() => {
+            console.log({ viewState: view.getState() });
+            console.log({ _runtime: view._runtime });
+            console.log({ view });
+            setView(view);
+          });
+        });
     }
   };
 
