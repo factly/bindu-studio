@@ -1,6 +1,9 @@
 import Home from '../pages/home/index.js';
 import Templates from '../pages/templates/index.js';
 
+import Theme from '../pages/theme/index.js';
+import CreateTheme from '../pages/theme/CreateTheme.js';
+
 // Categories
 import Categories from '../pages/categories/index.js';
 import CreateCategory from '../pages/categories/CreateCategory';
@@ -33,6 +36,14 @@ const routes = {
   templates: {
     path: '/templates',
     Component: Templates,
+  },
+  theme: {
+    path: '/theme',
+    Component: Theme,
+  },
+  createTheme: {
+    path: '/theme/create',
+    Component: CreateTheme,
   },
   createTemplate: {
     path: '/templates/create',
