@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 
 import ThemeForm from './components/ThemeForm';
 import Display from './components/Display';
-import { addTemplate } from '../../actions/templates';
+import { addTheme } from '../../actions/themes';
 import { collapseSider } from '../../actions/settings';
 
 function CreateTemplate() {
@@ -19,7 +19,7 @@ function CreateTemplate() {
   }, []);
 
   const onCreate = (values) => {
-    dispatch(addTemplate(values)).then(() => history.push('/templates'));
+    dispatch(addTheme(values)).then(() => history.push('/themes'));
   };
 
   const onChange = (values) => {

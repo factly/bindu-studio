@@ -52,16 +52,19 @@ function Sidebar() {
         <Menu.Item key="1" icon={<BarChartOutlined />}>
           <Link to={'/templates'}>Templates</Link>
         </Menu.Item>
-        <Menu.Item key="2" icon={<LineChartOutlined />}>
+        <Menu.Item key="2" icon={<BarChartOutlined />}>
+          <Link to={'/theme'}>Theme</Link>
+        </Menu.Item>
+        <Menu.Item key="3" icon={<LineChartOutlined />}>
           <Link to={'/charts/saved'}>Saved Charts</Link>
         </Menu.Item>
-        <Menu.Item key="3" icon={<TagOutlined />}>
+        <Menu.Item key="4" icon={<TagOutlined />}>
           <Link to={'/tags'}>Tags</Link>
         </Menu.Item>
-        <Menu.Item key="4" icon={<AppstoreOutlined />}>
+        <Menu.Item key="5" icon={<AppstoreOutlined />}>
           <Link to={'/categories'}>Categories</Link>
         </Menu.Item>
-        <Menu.Item key="5" icon={<AppstoreOutlined />}>
+        <Menu.Item key="6" icon={<AppstoreOutlined />}>
           <Link to={'/spaces'}>Spaces</Link>
         </Menu.Item>
       </Menu>

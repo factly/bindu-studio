@@ -120,7 +120,6 @@ function Display({
     if (Object.keys(spec).length) {
       try {
         const runtime = getRuntime(spec, new_mode, config);
-        // let runtime = vega.parse(runtimeSpec, config);
         const loader = vega.loader();
         const view = new vega.View(runtime, {
           loader,

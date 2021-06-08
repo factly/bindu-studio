@@ -1,11 +1,7 @@
 import React from 'react';
-import { Button, Form, Input, Space, Select } from 'antd';
-import { maker, checker } from '../../../utils/slug';
+import { Button, Form, Input, Space } from 'antd';
+import { maker } from '../../../utils/slug';
 import ThemeEditor from './ThemeEditor';
-
-import Categories from '../../../components/categories';
-
-const { Option } = Select;
 
 const layout = {
   labelCol: {
@@ -22,15 +18,6 @@ const tailLayout = {
   },
 };
 
-const jsonChecker = (value) => {
-  try {
-    JSON.parse(value);
-    return true;
-  } catch {
-    return false;
-  }
-};
-
 const ThemeForm = ({ onSubmit, data = {}, onChange, onModeChange }) => {
   const [form] = Form.useForm();
   const onReset = () => {
@@ -44,12 +31,11 @@ const ThemeForm = ({ onSubmit, data = {}, onChange, onModeChange }) => {
   };
 
   const onFinish = (values) => {
-    const { categories, spec, properties, ...rest } = values;
+    const { config, description, name } = values;
     onSubmit({
-      ...rest,
-      spec: JSON.parse(spec),
-      properties: JSON.parse(properties),
-      category_id: categories,
+      config: JSON.parse(config),
+      description: description,
+      name: name,
     });
     onReset();
   };
@@ -74,8 +60,8 @@ const ThemeForm = ({ onSubmit, data = {}, onChange, onModeChange }) => {
       onFinish={onFinish}
     >
       <Form.Item
-        name="title"
-        label="Config Name"
+        name="name"
+        label="Theme Name"
         rules={[
           {
             required: true,
@@ -87,23 +73,20 @@ const ThemeForm = ({ onSubmit, data = {}, onChange, onModeChange }) => {
       >
         <Input onChange={(e) => onTitleChange(e.target.value)} />
       </Form.Item>
-      {/* <Form.Item
-        name="slug"
-        label="Slug"
+      <Form.Item
+        name="description"
+        label="Theme Description"
         rules={[
           {
             required: true,
-            message: 'Please input the slug!',
+            message: 'Please enter config name!',
           },
-          {
-            pattern: checker,
-            message: 'Please enter valid slug!',
-          },
+          { min: 3, message: 'Name must be minimum 3 characters.' },
+          { max: 50, message: 'Name must be maximum 50 characters.' },
         ]}
       >
-        <Input />
+        <Input onChange={(e) => onTitleChange(e.target.value)} />
       </Form.Item>
-      <Categories form={form} required label="Category" /> */}
       <Form.Item
         name="config"
         label="Config"

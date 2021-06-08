@@ -8,6 +8,7 @@ import settings from './settings';
 import spaces from './spaces';
 import media from './media';
 import notifications from './notification';
+import themes from './themes';
 
 export default combineReducers({
   spaces,
@@ -19,4 +20,5 @@ export default combineReducers({
   settings,
   media,
   notifications,
+  themes,
 });
