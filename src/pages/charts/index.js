@@ -5,7 +5,6 @@ import ChartOption from './options.js';
 import { saveAs } from 'file-saver';
 import './index.css';
 import _ from 'lodash';
-import SplitPane from 'react-split-pane';
 
 import {
   Card,
@@ -18,6 +17,8 @@ import {
   Menu,
   Popover,
   Typography,
+  List,
+  Tabs,
 } from 'antd';
 import {
   SaveOutlined,
@@ -74,7 +75,9 @@ function Chart({ data = {}, onSubmit }) {
   const { templateId } = useParams();
   const [form] = Form.useForm();
 
-  const [spec, setSpec] = useState({});
+  const [uploadDataFile, setUploadDataFile] = useState('');
+  const [showUploadDataModal, setShowUploadDataModal] = useState(false);
+  const [showSampleDataModal, setShowSampleDataModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showOptions, setShowOptions] = useState(true);
   const [chartName, setChartName] = useState('Untitled');
@@ -84,11 +87,14 @@ function Chart({ data = {}, onSubmit }) {
   const [columns, setColumns] = useState([]);
   const space_slug = useSelector((state) => state.spaces.details[state.spaces.selected]?.slug);
   const template = useSelector(({ templates }) => templates.details[templateId]);
-  const splitContainer = React.useRef(null);
+  const dataViewContainer = React.useRef(null);
+  const displayRef = React.useRef(null);
+  const containerRef = React.useRef(null);
 
-  const onDataUpload = (dataDetails) => {
+  const spec = form.getFieldValue();
+
+  const handleVegaLiteUpload = (dataDetails) => {
     let values = form.getFieldValue();
-
     // Keep only one of values and url. If url exists, then remove values.
     _.unset(values, ['data', 'values']);
     _.set(values, ['data', 'url'], dataDetails.url.raw);
@@ -108,11 +114,56 @@ function Chart({ data = {}, onSubmit }) {
       });
   };
 
+  const handleVegaUpload = (dataDetails) => {
+    let values = form.getFieldValue();
+    const dataObjIndex = values.data.findIndex((dataObj) => dataObj.name === uploadDataFile);
+    if (dataObjIndex === -1) return;
+    _.unset(values, ['data', dataObjIndex, 'values']);
+    _.set(values, ['data', dataObjIndex, 'url'], dataDetails.url.raw);
+    form.setFieldsValue(values);
+    setUploadDataFile('');
+  };
+
+  const onDataUpload = (dataDetails) => {
+    let values = form.getFieldValue();
+    switch (values.mode) {
+      case 'vega': {
+        handleVegaUpload(dataDetails);
+        return;
+      }
+      case 'vega-lite': {
+        handleVegaLiteUpload(dataDetails);
+        return;
+      }
+      default: {
+        return;
+      }
+    }
+  };
+
   React.useEffect(() => {
     dispatch(collapseSider());
-    onValuesChange();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [template]);
+
+  React.useEffect(() => {
+    if (values.length > 0 && columns.length > 0) {
+      return;
+    }
+    const spec = form.getFieldValue();
+    switch (spec.mode) {
+      case 'vega': {
+        setDataForVega(spec.data);
+        break;
+      }
+      case 'vega-lite': {
+        setDataForVegaLite(spec.data);
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  }, [isDataView]);
 
   React.useEffect(() => {
     if (data && data.id) {
@@ -126,20 +177,48 @@ function Chart({ data = {}, onSubmit }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
-  React.useEffect(() => {
-    setSpec(form.getFieldValue());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [form.getFieldValue()]);
+  const saveFileFromUrl = (url) => {
+    saveAs(url, url.split('/').pop());
+  };
+
+  const saveFileFromValues = (values) => {
+    const blob = new Blob([JSON.stringify(values)], {
+      type: 'application/json;charset=utf-8',
+    });
+    saveAs(blob, 'sample.json');
+  };
+
+  const downloadData = (data) => {
+    const url = data.url;
+    const values = data.values;
+    if (url) {
+      saveFileFromUrl(url);
+    } else if (values) {
+      saveFileFromValues(values);
+    }
+  };
 
   const downloadSampleData = () => {
-    const url = form.getFieldValue(['data', 'url']);
-    const values = form.getFieldValue(['data', 'values']);
-    if (url) {
-      saveAs(url, url.split('/').pop());
-    } else if (values) {
-      const blob = new Blob([JSON.stringify(values)], { type: 'application/json;charset=utf-8' });
-      saveAs(blob, 'sample.json');
+    const spec = form.getFieldValue();
+    switch (spec.mode) {
+      case 'vega': {
+        setShowSampleDataModal(true);
+        return;
+      }
+      case 'vega-lite': {
+        const data = form.getFieldValue('data');
+        downloadData(data);
+        return;
+      }
+      default: {
+        return;
+      }
     }
+  };
+
+  const uploadData = (name) => {
+    setUploadDataFile(name);
+    setShowModal(true);
   };
 
   const downloadImage = async (e) => {
@@ -154,10 +233,9 @@ function Chart({ data = {}, onSubmit }) {
     saveAs(blob, `${chartName}.${ext}`);
   };
 
-  const saveChart = async (e) => {
+  const constructData = async (data) => {
     // If spec contains values, remove it and push it to minio. Then, set url of that file in spec
-    const formData = form.getFieldValue();
-    let url = formData.data.url;
+    let url = data.url;
     const path =
       space_slug +
       '/' +
@@ -168,31 +246,72 @@ function Chart({ data = {}, onSubmit }) {
       Date.now().toString() +
       '_';
 
-    if (formData.data.values) {
+    if (data.values) {
       // make a json file out of values
-      if (formData.data.url) {
+      if (data.url) {
         // replace file in minio at location `data.url`
 
         url = await updateFormData(
-          formData,
-          formData.data.url.includes('http://localhost:9000/dega/')
-            ? formData.data.url.replace('http://localhost:9000/dega/', '')
+          data,
+          data.url.includes('http://localhost:9000/dega/')
+            ? data.url.replace('http://localhost:9000/dega/', '')
             : path + chartName,
         );
       } else {
         // upload file to minio
-        url = await updateFormData(formData, path + chartName);
+        url = await updateFormData(data, path + chartName);
       }
       // send uploaded file url in api
     }
+    _.set(data, 'url', url);
+    _.unset(data, 'values');
+    return data;
+  };
 
+  const constructDataForVega = async (data) => {
+    return await Promise.all(
+      data.map(async (dataObj) => {
+        if (!(dataObj.url || dataObj.values)) return dataObj;
+        return await constructData(dataObj);
+      }),
+    );
+  };
+
+  const constructDataForVegaLite = async (data) => {
+    return await constructData(data);
+  };
+
+  const handleSaveChart = async (e) => {
+    const spec = form.getFieldValue();
+    const data = form.getFieldValue('data');
+    let updatedData = data;
+    switch (spec.mode) {
+      case 'vega': {
+        updatedData = await constructDataForVega(data);
+        break;
+      }
+      case 'vega-lite': {
+        updatedData = await constructDataForVegaLite(data);
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+    console.log('handleSaveChart', { spec, updatedData });
+    _.set(spec, ['data'], updatedData);
+    saveChart(e, spec);
+  };
+
+  const saveChart = async (e, formData) => {
     const { tags, categories, ...values } = formData;
     const imageBlob = await view?.toImageURL('png', 1);
+    // const svg = await view.toSVG();
 
     onSubmit({
       title: chartName,
-      data_url: url,
-      config: { ...values, data: { url } },
+      data_url: '', // TODO: handle this for vega and vega-lite
+      config: { ...values },
       featured_medium: imageBlob,
       category_ids: categories,
       tag_ids: tags,
@@ -203,23 +322,77 @@ function Chart({ data = {}, onSubmit }) {
     });
   };
 
-  const onValuesChange = () => {
-    setSpec(form.getFieldValue());
+  const vegaLiteDataChange = ({ fromRow, toRow, updated }) => {
+    const updatedValues = [...values];
+    for (let i = fromRow; i <= toRow; i++) {
+      updatedValues[i] = { ...updatedValues[i], ...updated };
+    }
+    setValues(updatedValues);
+
+    let formData = form.getFieldValue();
+    _.set(formData, ['data', 'values'], updatedValues);
+    form.setFieldsValue(formData);
   };
 
-  const onDataChange = (rowIndex, columnIndex, newValue) => {
+  const vegaDataChange = ({ fromRow, toRow, updated }, tabIndex) => {
     const updatedValues = [...values];
+    for (let i = fromRow; i <= toRow; i++) {
+      updatedValues[tabIndex][i] = { ...updatedValues[tabIndex][i], ...updated };
+    }
+    setValues(updatedValues);
+
+    const data = spec.data;
+    const updatedValuesClone = [...updatedValues];
+    const updatedDataList = data.map((dataObj) => {
+      if (!dataObj.url && !dataObj.values) {
+        return dataObj;
+      }
+      const nextValues = updatedValuesClone.shift();
+      if (dataObj.url) {
+        _.unset(dataObj, ['url']);
+      }
+      _.set(dataObj, ['values'], nextValues);
+      return dataObj;
+    });
+
+    let formData = form.getFieldValue();
+    _.set(formData, ['data'], updatedDataList);
+    form.setFieldsValue(formData);
+  };
+
+  const onDataChange = ({ fromRow, toRow, updated }, tabIndex) => {
     try {
-      updatedValues[rowIndex][columnIndex] = values[rowIndex][columnIndex].constructor(newValue);
-      setValues(updatedValues);
-
-      let formData = form.getFieldValue();
-
-      _.set(formData, ['data', 'values'], updatedValues);
-      form.setFieldsValue(formData);
-      setSpec(form.getFieldValue());
+      switch (spec.mode) {
+        case 'vega': {
+          vegaDataChange({ fromRow, toRow, updated }, tabIndex);
+          break;
+        }
+        case 'vega-lite': {
+          vegaLiteDataChange({ fromRow, toRow, updated });
+          break;
+        }
+        default: {
+          break;
+        }
+      }
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const handleUploadDataClick = () => {
+    switch (spec.mode) {
+      case 'vega': {
+        setShowUploadDataModal(true);
+        return;
+      }
+      case 'vega-lite': {
+        setShowModal(true);
+        return;
+      }
+      default: {
+        return;
+      }
     }
   };
 
@@ -240,7 +413,7 @@ function Chart({ data = {}, onSubmit }) {
         <Dropdown
           overlay={
             <div style={{ boxShadow: '0px 0px 6px 1px #999' }}>
-              <Menu onClick={saveChart}>
+              <Menu onClick={handleSaveChart}>
                 <Menu.Item key="draft">Draft</Menu.Item>
                 <Menu.Item key="publish">Publish</Menu.Item>
               </Menu>
@@ -253,9 +426,7 @@ function Chart({ data = {}, onSubmit }) {
     },
     {
       name: 'Upload',
-      Component: (
-        <UploadOutlined style={{ fontSize: IconSize }} onClick={() => setShowModal(true)} />
-      ),
+      Component: <UploadOutlined style={{ fontSize: IconSize }} onClick={handleUploadDataClick} />,
     },
     {
       name: isDataView ? 'Chart' : 'Data',
@@ -353,100 +524,116 @@ function Chart({ data = {}, onSubmit }) {
     </div>
   );
 
-  let SplitView;
-  if (isDataView) {
-    let headerRow = {};
-    if (spec?.data?.values) {
-      const newColumns = Object.keys(spec.data.values[0]).map((d) => {
-        headerRow[d] = d;
+  const getData = async (data) => {
+    if (data?.values) {
+      const newColumns = Object.keys(data.values[0]).map((d) => {
         return {
-          title: d,
-          dataIndex: d,
+          name: d,
+          key: d,
         };
       });
 
-      if (!columns.length) setColumns(newColumns);
-      if (!values.length) setValues(spec.data.values);
-    } else if (spec?.data?.url) {
-      const url = spec.data.url;
-      fetch(url)
-        .then((res) => res.json())
-        .then((newValues) => {
-          const newColumns = Object.keys(newValues[0]).map((d) => {
-            headerRow[d] = d;
-            return {
-              title: d,
-              dataIndex: d,
-            };
-          });
+      return [newColumns, data.values];
+    } else if (data?.url) {
+      const url = data.url;
+      const res = await fetch(url);
+      const newValues = await res.json();
 
-          if (!columns.length) setColumns(newColumns);
-          if (!values.length) setValues(newValues);
-        });
+      const newColumns = Object.keys(newValues[0]).map((d) => {
+        return {
+          name: d,
+          key: d,
+        };
+      });
+
+      return [newColumns, newValues];
+    } else {
+      return [[], []];
     }
+  };
 
-    const { width, height } = splitContainer.current.pane1.getBoundingClientRect();
+  const setDataForVegaLite = async (data) => {
+    const [newColumns, newValues] = await getData(data);
+    if (!columns.length) setColumns(newColumns);
+    if (!values.length) setValues(newValues);
+  };
 
-    SplitView = (
-      <SplitPane
-        ref={splitContainer}
-        pane1Style={{ width: '70%' }}
-        style={{ height: 'calc(100% - 48px)' }}
-        split="vertical"
-      >
-        <DataViewer
-          columns={columns}
-          dataSource={values}
-          onDataChange={onDataChange}
-          scroll={{
-            y: height - 55,
-            x: width,
-          }}
-        />
-        <SplitPane pane1Style={{ height: 'inherit' }} split="horizontal">
-          {/* <DataComponent /> */}
-          <Display spec={spec} setView={setView} />
-        </SplitPane>
-      </SplitPane>
-    );
-  } else {
-    SplitView = (
-      <SplitPane
-        ref={splitContainer}
-        pane1Style={{ width: showOptions ? '70%' : '100%', height: 'inherit' }}
-        style={{ height: 'calc(100% - 48px)' }}
-        split="vertical"
-      >
-        <Display spec={spec} setView={setView} />
-        <SplitPane
-          pane1Style={{
-            height: 'inherit',
-            overflow: 'auto',
-            flexDirection: 'column',
-            right: showOptions ? '0' : '-400px',
-          }}
-          split="horizontal"
-        >
-          <ChartOption form={form} templateId={data.template_id} isEdit={!!data.id} />
-          {/* <div className="extra-options" style={{ padding: '12px' }}>
-            <ChartMeta />
-          </div> */}
-        </SplitPane>
-      </SplitPane>
-    );
-  }
+  const setDataForVega = async (data) => {
+    const promises = data
+      ?.filter((dataObj) => dataObj.url || dataObj.values)
+      .map(async (dataObj) => {
+        const [newColumns, newValues] = await getData(dataObj);
+        setValues([...values, newValues]);
+        setColumns([...columns, newColumns]);
+      });
+    await Promise.all(promises);
+    return;
+  };
+
+  const { width: containerWidth = 0, height: containerHeight = 0 } =
+    containerRef?.current?.getBoundingClientRect() || {};
+  const { width: displayWidth = 0, height: displayHeight = 0 } =
+    displayRef?.current?.getBoundingClientRect() || {};
 
   return (
     <>
-      <Form form={form} layout="horizontal" onValuesChange={onValuesChange}>
-        <Card
-          title={<TitleComponent chartName={chartName} setChartName={setChartName} />}
-          extra={actionsList}
-          bodyStyle={{ overflow: 'auto', display: 'flex', padding: '0px', height: '80vh' }}
-        >
-          {SplitView}
-        </Card>
-      </Form>
+      <div ref={containerRef} className="chart-area-container">
+        <Form form={form} layout="horizontal">
+          <Card
+            title={<TitleComponent chartName={chartName} setChartName={setChartName} />}
+            extra={actionsList}
+            bodyStyle={{ overflow: 'auto', display: 'flex', padding: '0px', height: '80vh' }}
+          >
+            <div className="display-container" ref={displayRef}>
+              <Form.Item noStyle shouldUpdate={true}>
+                {(form) => {
+                  return (
+                    <Display
+                      spec={form.getFieldValue()}
+                      mode={form.getFieldValue().mode}
+                      setView={setView}
+                    />
+                  );
+                }}
+              </Form.Item>
+            </div>
+            {isDataView ? (
+              <div ref={dataViewContainer} className="data-view-container">
+                {spec.mode === 'vega' ? (
+                  <Tabs tabPosition={'left'}>
+                    {spec.data
+                      ?.filter((dataObj) => dataObj.url || dataObj.values)
+                      .map((dataObj, index) => (
+                        <Tabs.TabPane tab={dataObj.name} key={index}>
+                          <DataViewer
+                            columns={columns[index] || []}
+                            dataSource={values[index] || []}
+                            onDataChange={onDataChange}
+                            tableWidth={containerWidth - displayWidth}
+                            tableHeight={displayHeight - 40}
+                            tabIndex={index}
+                          />
+                        </Tabs.TabPane>
+                      ))}
+                  </Tabs>
+                ) : (
+                  <DataViewer
+                    columns={columns}
+                    dataSource={values}
+                    onDataChange={onDataChange}
+                    tableWidth={containerWidth - displayWidth}
+                    tableHeight={displayHeight - 40}
+                  />
+                )}
+              </div>
+            ) : (
+              <div className="option-container">
+                <ChartOption form={form} templateId={data.template_id} isEdit={!!data.id} />
+              </div>
+            )}
+          </Card>
+        </Form>
+      </div>
       <Modal
         title="Upload Dataset"
         visible={showModal}
@@ -456,6 +643,46 @@ function Chart({ data = {}, onSubmit }) {
       >
         <UppyUploader onUpload={onDataUpload} />
       </Modal>
+      {spec.mode === 'vega' && (
+        <Modal
+          title="Download Sample Data"
+          visible={showSampleDataModal}
+          onCancel={() => setShowSampleDataModal(false)}
+          onOk={() => setShowSampleDataModal(false)}
+          okText="Done"
+        >
+          <List
+            size="large"
+            bordered
+            dataSource={spec.data?.filter((dataObj) => dataObj.url || dataObj.values)}
+            renderItem={(dataObj) => (
+              <List.Item actions={[<a onClick={() => downloadData(dataObj)}>Download</a>]}>
+                {dataObj.name}
+              </List.Item>
+            )}
+          />
+        </Modal>
+      )}
+      {spec.mode === 'vega' && (
+        <Modal
+          title="Download Sample Data"
+          visible={showUploadDataModal}
+          onCancel={() => setShowUploadDataModal(false)}
+          onOk={() => setShowUploadDataModal(false)}
+          okText="Done"
+        >
+          <List
+            size="large"
+            bordered
+            dataSource={spec.data?.filter((dataObj) => dataObj.url || dataObj.values)}
+            renderItem={(dataObj) => (
+              <List.Item actions={[<a onClick={() => uploadData(dataObj.name)}>Upload</a>]}>
+                {dataObj.name}
+              </List.Item>
+            )}
+          />
+        </Modal>
+      )}
     </>
   );
 }
