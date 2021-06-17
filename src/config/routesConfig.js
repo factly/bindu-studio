@@ -3,6 +3,7 @@ import Templates from '../pages/templates/index.js';
 
 import Theme from '../pages/theme/index.js';
 import CreateTheme from '../pages/theme/CreateTheme.js';
+import EditTheme from '../pages/theme/EditTheme.js';
 
 // Categories
 import Categories from '../pages/categories/index.js';
@@ -39,12 +40,21 @@ const routes = {
     Component: Templates,
   },
   theme: {
-    path: '/theme',
+    path: '/themes',
     Component: Theme,
   },
   createTheme: {
-    path: '/theme/create',
+    path: '/themes/create',
     Component: CreateTheme,
+  },
+  editTheme: {
+    path: '/themes/:themeId/edit',
+    Component: EditTheme,
+    title: 'Edit Theme',
+    permission: {
+      resource: 'themes',
+      action: 'update',
+    },
   },
   templatesList: {
     path: '/templates/list',

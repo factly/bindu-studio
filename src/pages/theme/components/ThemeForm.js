@@ -46,14 +46,7 @@ const ThemeForm = ({ onSubmit, data = {}, onChange, onModeChange }) => {
       form={form}
       initialValues={{
         ...data,
-        config: data?.config
-          ? JSON.stringify(data.config)
-          : JSON.stringify({
-              background: '#333',
-              title: { color: '#fff', subtitleColor: '#fff' },
-              style: { 'guide-label': { fill: '#fff' }, 'guide-title': { fill: '#fff' } },
-              axis: { domainColor: '#fff', gridColor: '#888', tickColor: '#fff' },
-            }),
+        config: data?.config ? JSON.stringify(data.config, null, 2) : '{}',
       }}
       onValuesChange={onChange}
       name="create-chart"
@@ -65,7 +58,7 @@ const ThemeForm = ({ onSubmit, data = {}, onChange, onModeChange }) => {
         rules={[
           {
             required: true,
-            message: 'Please enter config name!',
+            message: 'Please enter theme name!',
           },
           { min: 3, message: 'Name must be minimum 3 characters.' },
           { max: 50, message: 'Name must be maximum 50 characters.' },
@@ -79,7 +72,7 @@ const ThemeForm = ({ onSubmit, data = {}, onChange, onModeChange }) => {
         rules={[
           {
             required: true,
-            message: 'Please enter config name!',
+            message: 'Please enter theme description!',
           },
           { min: 3, message: 'Name must be minimum 3 characters.' },
           { max: 50, message: 'Name must be maximum 50 characters.' },

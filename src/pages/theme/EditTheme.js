@@ -1,27 +1,46 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, useParams } from 'react-router-dom';
 
 import ThemeForm from './components/ThemeForm';
 import Display from './components/Display';
 import TemplateSelect from '../templates/components/TemplateSelect';
 
-import { addTheme } from '../../actions/themes';
-import { collapseSider } from '../../actions/settings';
+import { getTheme, updateTheme } from '../../actions/themes';
 
-function CreateTheme() {
+function EditTheme() {
+  const { themeId: id } = useParams();
+
   const [themeConfig, setConfig] = React.useState({});
 
   const history = useHistory();
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    dispatch(collapseSider());
+    dispatch(getTheme(id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [id]);
 
-  const onCreate = (values) => {
-    dispatch(addTheme(values)).then(() => history.push('/themes'));
+  const { theme, loading } = useSelector(({ themes }) => {
+    return {
+      theme: themes.details[id] ? themes.details[id] : null,
+      loading: themes.loading,
+    };
+  });
+
+  React.useEffect(() => {
+    if (theme?.config) setConfig(theme.config);
+  }, [theme]);
+
+  const onUpdate = (values) => {
+    dispatch(
+      updateTheme({
+        ...values,
+        id,
+      }),
+    ).then(() => {
+      history.push('/themes');
+    });
   };
 
   const onChange = (values) => {
@@ -35,16 +54,18 @@ function CreateTheme() {
     }
   };
 
+  if (loading) return null;
+
   return (
     <div style={{ display: 'flex', height: '80vh' }}>
       <div style={{ flex: 1, height: '100%', overflow: 'auto' }}>
         <TemplateSelect theme={themeConfig} />
       </div>
       <div style={{ flex: 1, height: '100%', overflow: 'auto' }}>
-        <ThemeForm onSubmit={onCreate} onChange={onChange} data={themeConfig} />
+        <ThemeForm onSubmit={onUpdate} onChange={onChange} data={theme} />
       </div>
     </div>
   );
 }
 
-export default CreateTheme;
+export default EditTheme;

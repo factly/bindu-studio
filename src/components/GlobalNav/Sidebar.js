@@ -53,7 +53,7 @@ function Sidebar() {
           <Link to={'/templates'}>Templates</Link>
         </Menu.Item>
         <Menu.Item key="2" icon={<BarChartOutlined />}>
-          <Link to={'/theme'}>Theme</Link>
+          <Link to={'/themes'}>Themes</Link>
         </Menu.Item>
         <Menu.Item key="3" icon={<LineChartOutlined />}>
           <Link to={'/charts/saved'}>Saved Charts</Link>
